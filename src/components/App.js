@@ -46,7 +46,7 @@ var App = React.createClass({
   componentDidMount: function() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({loggedIn: true, currentUser: user.email});
+        this.setState({loggedIn: true, currentUser: user.displayName });
       } else {
         browserHistory.push('/login');
       }

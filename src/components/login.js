@@ -8,6 +8,7 @@ var Login = React.createClass({
       email: '',
       password: '',
       mode: 'login',
+      name: '',
       error: null
     }
   },
@@ -26,11 +27,18 @@ var Login = React.createClass({
         </label>
       </div>
       <div>
-        <label for='email'>Email</label>
+        <label htmlFor='email'>Email</label>
         <input type='text' name='email' value={ this.state.email } onChange={ this.setEmail } />
       </div>
+      { this.state.mode == 'signup' ?
+        <div>
+          <label htmlFor='name'>Name</label>
+          <input type='text' name='name' value={ this.state.name } onChange={ this.setName } />
+        </div> :
+        null
+      }
       <div>
-        <label for='email'>Password</label>
+        <label htmlFor='email'>Password</label>
         <input type='password' name='password' value={ this.state.password } onChange={ this.setPassword } />
       </div>
       <div>
@@ -42,6 +50,7 @@ var Login = React.createClass({
   setEmail: function(evt) { this.setState({ email: evt.target.value }); },
   setPassword: function(evt) { this.setState({ password: evt.target.value }); },
   setMode: function(evt) { this.setState({ mode: evt.target.value }); },
+  setName: function(evt) { this.setState({ name: evt.target.value }); },
 
   login: function() {
     var result;
@@ -49,6 +58,9 @@ var Login = React.createClass({
       result = firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
     } else {
       result = firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((user) => {
+        return user.updateProfile({ displayName: this.state.name })
+      });
     }
 
     result.then((data) => {
